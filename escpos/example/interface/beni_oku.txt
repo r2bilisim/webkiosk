@@ -1,0 +1,11 @@
+	/*
+		-- =============================================
+		-- Author:		EKOMURCU
+		-- Create date: 19.03.2019
+		-- Description:	Bilet Yazdýrma Modülü(ESCPOS)
+		-- ============================================= 
+	*/
+
+son yazýdýrýlan bilet bilgileri
+   -> biletler klasörü içinde tutulur.
+yazdir.php ile ESCPOS'a veri gönderme iþlemi gerçekleþtirilir.

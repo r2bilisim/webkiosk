@@ -1,0 +1,11 @@
+php 5.6.+ için SQLSRV32.EXE içindeki php_sqlsrv_56_ts.dll ve php_pdo_sqlsrv_56_ts.dll
+dosyalarýný C:\wamp2\bin\php\php5.6.25\ext klasörüne at 
+php.ini den de dll leri tanýt(extension=php_sqlsrv_56_ts.dll
+extension=php_pdo_sqlsrv_56_ts.dll) satýrlarýný ekle.
+
+wamp Sunucuyu yeniden baþlat.
+
+msodbcsql.msi kurulumu ile odbc11 driveri kur.
+
+db_mssql.php ile db.php yi yer deðiþtir. 
+EKÖMÜRCÜ: 12.11.2017

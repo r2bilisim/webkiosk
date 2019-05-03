@@ -1,0 +1,76 @@
+﻿USE [META_SPDB]
+GO
+/****** Object:  StoredProcedure [dbo].[HASTA_ISTEMLER]    Script Date: 10/26/2017 21:25:12 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		UB
+-- Create date: 14.03.2017
+-- Description:	
+-- =============================================
+ALTER PROCEDURE [dbo].[HASTA_ISTEMLER] 
+	-- Add the parameters for the stored procedure here
+	@DOSYA_NO varchar(15) = '', 
+	@TC_NO varchar(15) = '',
+	@BIRIM_NO int =0
+AS
+BEGIN
+DECLARE @D_NO int=0;
+DECLARE @T_NO varchar(15) = '';
+DECLARE @R_COUNT int=0;
+	SET NOCOUNT ON;
+	if @DOSYA_NO<>'' SET @D_NO=CAST(@DOSYA_NO as int);
+	if @TC_NO<>'' AND LEN(@TC_NO)<11 
+		SET @D_NO=CAST(@TC_NO as int)
+	else
+		SET @T_NO=@TC_NO;
+	if APP_NAME()<>'.Net SqlClient Data Provider' OR @T_NO<>'' OR @D_NO<>0 
+	BEGIN
+		SELECT L.DOSYA_NO, L.TC_NO, L.BAYAN, L.AD, L.SOYAD, MAX(L.TALEP_TARIH) AS TALEP_TARIH, L.CIHAZ, MIN(L.ONCELIK) AS ONCELIK
+		, A.HBYS_SM_ID, A.SM_GRUP_ID, A.SM_BUTON_ID
+		FROM MAMAKADSM_HASTAM..FN_HASTA_ISTEM(@D_NO, @T_NO, DEFAULT) AS L
+		LEFT OUTER JOIN (SELECT * FROM MAMAKADSM_HASTAM..TblCIHAZ_SM_AYAR WHERE CIHAZ_BIRIM_ID=@BIRIM_NO) AS A
+		ON A.HBYS_CIHAZ = L.CIHAZ AND A.HBYS_ONCELIK = L.ONCELIK
+		GROUP BY  DOSYA_NO, TC_NO, BAYAN, AD, SOYAD, CIHAZ --, ONCELIK
+		, A.HBYS_SM_ID, A.SM_GRUP_ID, A.SM_BUTON_ID
+		ORDER BY ONCELIK;
+	
+		SELECT @R_COUNT=@@ROWCOUNT;
+	END
+	else
+		SELECT @R_COUNT=-1;
+		INSERT INTO [dbo].[HASTA_ISTEMLER_LOG]
+				   ([LOG_TIME]
+				   ,[DOSYA_NO]
+				   ,[TC_NO]
+				   ,[D_NO]
+				   ,[T_NO]
+				   ,[R_COUNT]
+				   ,[HOST_NAME]
+				   ,APP_NAME)
+			 VALUES
+				   (GETDATE()
+				   ,@DOSYA_NO
+				   ,@TC_NO
+				   ,@D_NO
+				   ,@T_NO
+				   ,@R_COUNT
+				   ,HOST_NAME()
+				   ,APP_NAME())	
+
+		if @R_COUNT>3 AND APP_NAME()='.Net SqlClient Data Provider'
+			SELECT L.DOSYA_NO, L.TC_NO, L.BAYAN, L.AD, L.SOYAD, MAX(L.TALEP_TARIH) AS TALEP_TARIH, L.CIHAZ, MIN(L.ONCELIK) AS ONCELIK
+			, A.HBYS_SM_ID, A.SM_GRUP_ID, A.SM_BUTON_ID
+			FROM MAMAKADSM_HASTAM..FN_HASTA_ISTEM(@D_NO, @T_NO, DEFAULT) AS L
+			LEFT OUTER JOIN (SELECT * FROM MAMAKADSM_HASTAM..TblCIHAZ_SM_AYAR WHERE CIHAZ_BIRIM_ID=@BIRIM_NO) AS A
+			ON A.HBYS_CIHAZ = L.CIHAZ AND A.HBYS_ONCELIK = L.ONCELIK
+			GROUP BY  DOSYA_NO, TC_NO, BAYAN, AD, SOYAD, CIHAZ --, ONCELIK
+			, A.HBYS_SM_ID, A.SM_GRUP_ID, A.SM_BUTON_ID
+			ORDER BY ONCELIK;
+
+
+END
+

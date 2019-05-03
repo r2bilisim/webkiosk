@@ -1,0 +1,19 @@
+	/*
+		-- =============================================
+		-- Author:		EKOMURCU
+		-- Create date: 19.03.2019
+		-- Description:	Bilet Yazdýrma Modülü(ESCPOS)
+		-- ============================================= 
+	*/
+
+escpos yöntemiyle yazýcýdan direk çýktý almak için kullanýldý.
+
+example
+    ->interface
+	   ->yazdir.php ile 
+anadizin 
+	->buton.php içinden ajax ile data alýr ve yazdýrma iþlemini gerçekleþtirir.
+
+kioskayar.php içinden alýnan bilet önizleme bilgisi ile bilet ayarlarý  yapýlýr
+
+

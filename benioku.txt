@@ -1,0 +1,6 @@
+index.php
+satır 30: sanalKlavye yükle ama bunu icin nasıl bir işlem yapılmalı?
+<?php if(isset($sanalKlavye) or false){ include("klavye/index.php"); } 
+kiosk_ayar tablosunda sanalKlavye açma/kapama için bir özellik eklenebilir veya
+Web randevu alanıyla ilişkilendirilebilir.
+Böylelikle barkodla bilet kısmı ile sanal klavye ile bilet alma işlemi ayrılabilir.
